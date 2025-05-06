@@ -24,6 +24,10 @@ public class OrderItem {
 	private Orders orders;
 	@ManyToOne
 	private Product product;
+
+	@ManyToOne
+	Cart cart;
+	
 	public Long getId() {
 		return id;
 	}
@@ -53,6 +57,12 @@ public class OrderItem {
 	}
 	public void setProduct(Product product) {
 		this.product = product;
+	}
+	public Cart getCart() {
+		return cart;
+	}
+	public void setCart(Cart cart) {
+		this.cart = cart;
 	}
 	
 }
