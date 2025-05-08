@@ -17,7 +17,7 @@ public class OrderItem {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	@Column(nullable = false)
-	private Long quantity;
+	private Integer quantity;
 	@Column(nullable = false)
 	private Double price;
 	@ManyToOne
@@ -27,40 +27,51 @@ public class OrderItem {
 
 	@ManyToOne
 	Cart cart;
-	
+
 	public Long getId() {
 		return id;
 	}
+
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public Long getQuantity() {
+
+	public Integer getQuantity() {
 		return quantity;
 	}
-	public void setQuantity(Long quantity) {
+
+	public void setQuantity(Integer quantity) {
 		this.quantity = quantity;
 	}
+
 	public Double getPrice() {
 		return price;
 	}
+
 	public void setPrice(Double price) {
 		this.price = price;
 	}
+
 	public Orders getOrders() {
 		return orders;
 	}
+
 	public void setOrders(Orders orders) {
 		this.orders = orders;
 	}
+
 	public Product getProduct() {
 		return product;
 	}
+
 	public void setProduct(Product product) {
 		this.product = product;
 	}
+
 	public Cart getCart() {
 		return cart;
 	}
+
 	public void setCart(Cart cart) {
 		this.cart = cart;
 	}

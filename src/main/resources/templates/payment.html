@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Payment | ShopEase</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #3399cc;
+            --secondary-color: #f8f9fa;
+            --text-color: #333;
+            --light-text: #666;
+            --border-color: #ddd;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --success-color: #28a745;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: var(--text-color);
+            line-height: 1.6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .payment-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .logo {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 20px;
+            object-fit: contain;
+        }
+        
+        h1 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            font-size: 1.8rem;
+        }
+        
+        .payment-description {
+            color: var(--light-text);
+            margin-bottom: 30px;
+            font-size: 1rem;
+        }
+        
+        .payment-details {
+            background: var(--secondary-color);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+        
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+        
+        .detail-row:last-child {
+            margin-bottom: 0;
+        }
+        
+        .detail-label {
+            color: var(--light-text);
+            font-weight: 500;
+        }
+        
+        .detail-value {
+            font-weight: 600;
+        }
+        
+        .amount {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+        
+        .payment-button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .payment-button:hover {
+            background-color: #2a7ca5;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+        
+        .secure-payment {
+            margin-top: 20px;
+            color: var(--light-text);
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .secure-payment i {
+            color: var(--success-color);
+        }
+        
+        @media (max-width: 576px) {
+            .payment-container {
+                padding: 25px;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            .payment-description {
+                font-size: 0.9rem;
+            }
+            
+            .payment-button {
+                padding: 12px 20px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="payment-container">
+        <img th:src="@{/images/logo.png}" alt="ShopEase Logo" class="logo">
+        <h1>Complete Your Payment</h1>
+        <p class="payment-description">Secure payment processed by Razorpay</p>
+        
+        <div class="payment-details">
+            <div class="detail-row">
+                <span class="detail-label">Order ID:</span>
+                <span class="detail-value" th:text="${orderId}"></span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Amount:</span>
+                <span class="detail-value amount" th:text="'₹' + ${amount/100}"></span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Customer:</span>
+                <span class="detail-value" th:text="${session.customer.name}"></span>
+            </div>
+        </div>
+        
+        <button id="rzp-button1" class="payment-button">
+            <i class="fas fa-lock"></i> Pay Securely
+        </button>
+        
+        <p class="secure-payment">
+            <i class="fas fa-shield-alt"></i> 100% Secure Payment
+        </p>
+    </div>
+
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script th:inline="javascript">
+        var options = {
+            "key": [[${key}]],
+            "amount": [[${amount}]],
+            "currency": "INR",
+            "name": "ShopEase",
+            "description": "Payment for Order",
+            "image": "/images/logo.png",
+            "order_id": [[${orderId}]], 
+            "callback_url": [[${url}]],
+            "prefill": {
+                "name": [[${session.customer.name}]],
+                "email": [[${session.customer.email}]],
+                "contact": ""
+            },
+            "notes": {
+                "address": "Razorpay Corporate Office"
+            },
+            "theme": {
+                "color": "#3399cc"
+            },
+            "modal": {
+                "ondismiss": function(){
+                    // Optional: Handle when payment popup is closed
+                    console.log("Payment window closed");
+                }
+            }
+        };
+        
+        var rzp1 = new Razorpay(options);
+        
+        document.getElementById('rzp-button1').onclick = function(e){
+            rzp1.open();
+            e.preventDefault();
+        }
+        
+        // Auto-open payment modal on page load (optional)
+        // window.onload = function() {
+        //     document.getElementById('rzp-button1').click();
+        // }
+    </script>
+</body>
+</html>

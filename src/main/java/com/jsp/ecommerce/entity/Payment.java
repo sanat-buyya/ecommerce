@@ -35,4 +35,41 @@ public class Payment {
 	private String paymentId;
 	@OneToOne
 	Orders orders;
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
+	public Double getAmount() {
+		return amount;
+	}
+	public void setAmount(Double amount) {
+		this.amount = amount;
+	}
+	public PaymentStatus getStatus() {
+		return status;
+	}
+	public void setStatus(PaymentStatus status) {
+		this.status = status;
+	}
+	public LocalDateTime getCreatedTime() {
+		return createdTime;
+	}
+	public void setCreatedTime(LocalDateTime createdTime) {
+		this.createdTime = createdTime;
+	}
+	public String getPaymentId() {
+		return paymentId;
+	}
+	public void setPaymentId(String paymentId) {
+		this.paymentId = paymentId;
+	}
+	public Orders getOrders() {
+		return orders;
+	}
+	public void setOrders(Orders orders) {
+		this.orders = orders;
+	}
+	
 }

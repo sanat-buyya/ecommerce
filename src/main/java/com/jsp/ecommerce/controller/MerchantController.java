@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,8 +13,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.jsp.ecommerce.dto.ProductDto;
 import com.jsp.ecommerce.dto.UserDto;
+import com.jsp.ecommerce.entity.Merchant;
 import com.jsp.ecommerce.service.MerchantService;
-
+import com.jsp.ecommerce.service.MerchantServiceImpl;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
@@ -21,8 +23,14 @@ import jakarta.validation.Valid;
 @RequestMapping("/merchant")
 public class MerchantController {
 
+    private final MerchantServiceImpl merchantServiceImpl;
+
 	@Autowired
 	MerchantService merchantService;
+
+    MerchantController(MerchantServiceImpl merchantServiceImpl) {
+        this.merchantServiceImpl = merchantServiceImpl;
+    }
 
 	@GetMapping("/register")
 	public String loadRegister(UserDto userDto, Model model) {
@@ -79,4 +87,7 @@ public class MerchantController {
 	public String deleteProduct(@PathVariable("id") Long id, HttpSession session) {
 		return merchantService.deleteById(id, session);
 	}
+
+	
+
 }
