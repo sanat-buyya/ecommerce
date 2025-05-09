@@ -12,6 +12,7 @@ import org.springframework.validation.BindingResult;
 import com.jsp.ecommerce.dto.ProductDto;
 import com.jsp.ecommerce.dto.Status;
 import com.jsp.ecommerce.dto.UserDto;
+import com.jsp.ecommerce.entity.Customer;
 import com.jsp.ecommerce.entity.Merchant;
 import com.jsp.ecommerce.entity.Product;
 import com.jsp.ecommerce.helper.AES;
@@ -229,5 +230,41 @@ public class MerchantServiceImpl implements MerchantService {
 			return "redirect:/login";
 		}
 	}
+
+	@Override
+	public String manageProfile(HttpSession session, Model model) {
+		Merchant merchant = (Merchant) session.getAttribute("merchant");
+		if (merchant != null) {
+			model.addAttribute("name", merchant.getName());
+			return "merchant-manage-profile";
+		} else {
+			session.setAttribute("fail", "Invalid Session, First Login to Access");
+			return "redirect:/login";
+		}
+	}
+
+	@Override
+	public String manageProfile(HttpSession session, UserDto dto) {
+		Merchant merchant = (Merchant) session.getAttribute("merchant");
+		if (merchant != null) {
+			if (dto.getPassword().length()>0 && !dto.getPassword().matches("^.*(?=.{8,})(?=..*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=]).*$")) {
+				session.setAttribute("fail",
+						"Password is Not Strong Enough Should be 8 char with one upper , lower , special char and digit");
+				return "redirect:/merchant/manage-profile";
+			} else {
+				merchant.setName(dto.getName());
+				if(dto.getPassword().length()>0)
+				merchant.setPassword(AES.encrypt(dto.getPassword()));
+				merchantRepository.save(merchant);
+				session.setAttribute("pass", "Profile Updated Success");
+				return "redirect:/merchant/home";
+			}
+		} else {
+			session.setAttribute("fail", "Invalid Session, First Login to Access");
+			return "redirect:/login";
+		}
+	}
+	
+	
 
 }

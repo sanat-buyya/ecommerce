@@ -87,7 +87,15 @@ public class MerchantController {
 	public String deleteProduct(@PathVariable("id") Long id, HttpSession session) {
 		return merchantService.deleteById(id, session);
 	}
-
 	
+	@GetMapping("/manage-profile")
+	public String manageProfile(HttpSession session, Model model) {
+		return merchantService.manageProfile(session, model);
+	}
+	
+	@PostMapping("/manage-profile")
+	public String manageProfile(HttpSession session, @ModelAttribute UserDto dto) {
+		return merchantService.manageProfile(session, dto);
+	}
 
 }

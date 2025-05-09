@@ -27,6 +27,9 @@ public class Customer {
 	private String password;
 	@CreationTimestamp
 	private LocalDateTime createdTime;
+
+	private String address;
+	private Long mobile;
 	public Long getId() {
 		return id;
 	}
@@ -56,6 +59,18 @@ public class Customer {
 	}
 	public void setCreatedTime(LocalDateTime createdTime) {
 		this.createdTime = createdTime;
+	}
+	public String getAddress() {
+		return address;
+	}
+	public void setAddress(String address) {
+		this.address = address;
+	}
+	public Long getMobile() {
+		return mobile;
+	}
+	public void setMobile(Long mobile) {
+		this.mobile = mobile;
 	}
 	
 }
