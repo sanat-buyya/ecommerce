@@ -11,5 +11,8 @@ public interface GeneralService {
 	String login(String email, String password, HttpSession session);
 
 	String logout(HttpSession session);
+
+	String forgotPassword(String email, String password, String conformPassword, HttpSession session);
+
 	
 }

@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Forgot Password - ShopEase</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --primary: #4361ee;
+        --primary-dark: #3a56d4;
+        --secondary: #7209b7;
+        --light: #f8f9fa;
+        --dark: #212529;
+        --success: #2ecc71;
+        --danger: #e74c3c;
+        --warning: #f39c12;
+        --gray: #6c757d;
+        --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        --transition: all 0.3s ease;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif;
+      }
+      body {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        background-color: var(--light);
+        color: var(--dark);
+        background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%234361ee' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+      }
+      .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 5%;
+        background-color: #ffffff;
+        box-shadow: var(--shadow);
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+      }
+      .logo {
+        display: flex;
+        align-items: center;
+      }
+      .logo a {
+        text-decoration: none;
+        color: var(--dark);
+        display: flex;
+        align-items: center;
+      }
+      .logo i {
+        font-size: 2rem;
+        color: var(--primary);
+        margin-right: 10px;
+      }
+      .logo h1 {
+        font-size: 1.8rem;
+        color: var(--primary);
+        font-weight: 700;
+      }
+      .nav-buttons {
+        display: flex;
+        gap: 15px;
+      }
+      .nav-btn {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition);
+      }
+      .login-btn {
+        background-color: transparent;
+        color: var(--primary);
+        border: 2px solid var(--primary);
+      }
+      .login-btn:hover {
+        background-color: var(--primary);
+        color: white;
+      }
+      .register-btn {
+        background-color: var(--primary);
+        color: white;
+        position: relative;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+      .register-btn:hover {
+        background-color: var(--primary-dark);
+      }
+      .dropdown {
+        position: relative;
+        display: inline-block;
+      }
+      .dropdown-content {
+        display: none;
+        position: absolute;
+        right: 0;
+        background-color: #ffffff;
+        min-width: 220px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        z-index: 1;
+        overflow: hidden;
+        transition: var(--transition);
+      }
+      .dropdown:hover .dropdown-content {
+        display: block;
+        animation: fadeIn 0.3s;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .dropdown-option {
+        padding: 12px 16px;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--dark);
+        transition: var(--transition);
+      }
+      .dropdown-option:hover {
+        background-color: #f1f5ff;
+        color: var(--primary);
+      }
+      .alert {
+        position: fixed;
+        top: 80px;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 15px 25px;
+        border-radius: 8px;
+        box-shadow: var(--shadow);
+        z-index: 1001;
+        display: flex;
+        align-items: center;
+        min-width: 300px;
+        max-width: 500px;
+        animation: slideDown 0.3s, fadeOut 0.5s 1.5s forwards;
+      }
+      .alert-success {
+        background-color: #d4edda;
+        color: #155724;
+        border-left: 4px solid var(--success);
+      }
+      .alert-danger {
+        background-color: #f8d7da;
+        color: #721c24;
+        border-left: 4px solid var(--danger);
+      }
+      .alert-icon {
+        margin-right: 10px;
+        font-size: 1.2rem;
+      }
+      @keyframes slideDown {
+        from {
+          transform: translate(-50%, -20px);
+          opacity: 0;
+        }
+        to {
+          transform: translate(-50%, 0);
+          opacity: 1;
+        }
+      }
+      @keyframes fadeOut {
+        from {
+          opacity: 1;
+        }
+        to {
+          opacity: 0;
+          visibility: hidden;
+        }
+      }
+      .login-container {
+        max-width: 450px;
+        width: 90%;
+        margin: 50px auto;
+        padding: 40px;
+        background-color: white;
+        border-radius: 12px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        animation: fadeIn 0.5s;
+        position: relative;
+        overflow: hidden;
+      }
+      .login-container::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 5px;
+        background: linear-gradient(90deg, var(--primary), var(--secondary));
+      }
+      .login-header {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+      .login-header h2 {
+        font-size: 2rem;
+        color: var(--dark);
+        margin-bottom: 10px;
+        position: relative;
+        display: inline-block;
+      }
+      .login-header h2::after {
+        content: "";
+        position: absolute;
+        bottom: -5px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 50px;
+        height: 3px;
+        background: linear-gradient(
+          90deg,
+          var(--primary) 0%,
+          var(--secondary) 100%
+        );
+        border-radius: 3px;
+      }
+      .login-header p {
+        color: var(--gray);
+        font-size: 1rem;
+      }
+      .form-group {
+        margin-bottom: 25px;
+        position: relative;
+        transition: var(--transition);
+      }
+      .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+        color: var(--dark);
+      }
+      .form-group .input-with-icon {
+        position: relative;
+      }
+      .form-group .input-icon {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--gray);
+        transition: var(--transition);
+      }
+      .form-group input {
+        width: 100%;
+        padding: 12px 15px 12px 45px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: var(--transition);
+      }
+      .form-group input:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+        outline: none;
+      }
+      .form-group input:focus + .input-icon {
+        color: var(--primary);
+      }
+      .input-focused {
+        transform: translateY(-5px);
+      }
+      .submit-button {
+        width: 100%;
+        padding: 14px;
+        background: linear-gradient(
+          135deg,
+          var(--primary) 0%,
+          var(--secondary) 100%
+        );
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: var(--transition);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        position: relative;
+        overflow: hidden;
+      }
+      .submit-button::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.2),
+          transparent
+        );
+        transition: 0.5s;
+      }
+      .submit-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+      }
+      .submit-button:hover::before {
+        left: 100%;
+      }
+      .register-link {
+        text-align: center;
+        margin-top: 25px;
+        color: var(--gray);
+      }
+      .register-link a {
+        color: var(--primary);
+        text-decoration: none;
+        font-weight: 600;
+        transition: var(--transition);
+      }
+      .register-link a:hover {
+        color: var(--primary-dark);
+        text-decoration: underline;
+      }
+      .footer {
+        background-color: #1a1a1a;
+        color: white;
+        padding: 3rem 5% 1.5rem;
+        margin-top: auto;
+      }
+      .footer-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .footer-logo {
+        display: flex;
+        align-items: center;
+      }
+      .footer-logo i {
+        font-size: 1.8rem;
+        margin-right: 10px;
+        color: white;
+      }
+      .footer-logo h2 {
+        font-size: 1.5rem;
+        color: white;
+      }
+      .social-icons-footer {
+        display: flex;
+        gap: 15px;
+      }
+      .social-icons-footer a {
+        color: white;
+        background-color: rgba(255, 255, 255, 0.1);
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: var(--transition);
+      }
+      .social-icons-footer a:hover {
+        background-color: var(--primary);
+        transform: translateY(-3px);
+      }
+      .footer-bottom {
+        text-align: center;
+        padding-top: 1.5rem;
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 0.9rem;
+      }
+      /* Accessibility improvements */
+      .skip-link {
+        position: absolute;
+        top: -40px;
+        left: 0;
+        background: var(--primary);
+        color: white;
+        padding: 8px;
+        z-index: 1001;
+        transition: top 0.3s;
+      }
+      .skip-link:focus {
+        top: 0;
+      }
+      button:focus,
+      a:focus {
+        outline: 2px solid var(--primary);
+        outline-offset: 2px;
+      }
+      .password-toggle {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--gray);
+        cursor: pointer;
+        transition: var(--transition);
+      }
+      .password-toggle:hover {
+        color: var(--primary);
+      }
+      /* Password strength meter */
+      .password-strength-meter {
+        height: 5px;
+        width: 100%;
+        background-color: #ddd;
+        margin-top: 8px;
+        border-radius: 3px;
+        position: relative;
+        overflow: hidden;
+      }
+      .password-strength-meter-fill {
+        height: 100%;
+        border-radius: 3px;
+        transition: width 0.3s ease, background-color 0.3s ease;
+        width: 0;
+      }
+      .strength-weak {
+        background-color: var(--danger);
+        width: 25%;
+      }
+      .strength-fair {
+        background-color: var(--warning);
+                width: 50%;
+      }
+      .strength-good {
+        background-color: #3498db;
+        width: 75%;
+      }
+      .strength-strong {
+        background-color: var(--success);
+        width: 100%;
+      }
+      .password-strength-text {
+        font-size: 0.8rem;
+        margin-top: 5px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+      /* Password match indicator */
+      .password-match-indicator {
+        font-size: 0.8rem;
+        margin-top: 5px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+      .match-success {
+        color: var(--success);
+      }
+      .match-error {
+        color: var(--danger);
+      }
+      /* Responsive styles */
+      @media (max-width: 768px) {
+        .login-container {
+          padding: 30px 20px;
+          margin: 30px auto;
+        }
+        .login-header h2 {
+          font-size: 1.8rem;
+        }
+        .footer-content {
+          flex-direction: column;
+          gap: 20px;
+          text-align: center;
+        }
+        .mobile-menu-btn {
+          display: block;
+        }
+        .navbar .nav-buttons {
+          display: none;
+        }
+      }
+      .mobile-menu-btn {
+        display: none;
+        background: none;
+        border: none;
+        color: var(--dark);
+        font-size: 1.5rem;
+        cursor: pointer;
+      }
+      .mobile-menu {
+        display: none;
+        position: fixed;
+        top: 70px;
+        left: 0;
+        width: 100%;
+        background-color: white;
+        padding: 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        z-index: 999;
+      }
+      .mobile-menu .nav-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+      }
+      .mobile-menu .dropdown {
+        position: static;
+      }
+      .mobile-menu .dropdown-content {
+        position: static;
+        display: none;
+        box-shadow: none;
+        margin-top: 10px;
+        margin-left: 15px;
+      }
+      .mobile-menu .dropdown.active .dropdown-content {
+        display: block;
+      }
+      /* Added animation for forgot container */
+      @keyframes floatUp {
+        0% {
+          transform: translateY(10px);
+          opacity: 0;
+        }
+        100% {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+      .forgot-container {
+        max-width: 450px;
+        width: 90%;
+        margin: 50px auto;
+        padding: 40px;
+        background-color: white;
+        border-radius: 12px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        animation: floatUp 0.5s ease-out forwards;
+        position: relative;
+        overflow: hidden;
+      }
+      .forgot-container::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 5px;
+        background: linear-gradient(90deg, var(--primary), var(--secondary));
+      }
+      .forgot-header {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+      .forgot-header h2 {
+        font-size: 2rem;
+        color: var(--dark);
+        margin-bottom: 10px;
+        position: relative;
+        display: inline-block;
+      }
+      .forgot-header h2::after {
+        content: "";
+        position: absolute;
+        bottom: -5px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 50px;
+        height: 3px;
+        background: linear-gradient(
+          90deg,
+          var(--primary) 0%,
+          var(--secondary) 100%
+        );
+        border-radius: 3px;
+      }
+      .forgot-header p {
+        color: var(--gray);
+        font-size: 1rem;
+      }
+      .login-link {
+        text-align: center;
+        margin-top: 25px;
+        color: var(--gray);
+      }
+      .login-link a {
+        color: var(--primary);
+        text-decoration: none;
+        font-weight: 600;
+        transition: var(--transition);
+      }
+      .login-link a:hover {
+        color: var(--primary-dark);
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Accessibility skip link -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <nav class="navbar">
+      <div class="logo">
+        <a href="/">
+          <i class="fas fa-shopping-bag"></i>
+          <h1>ShopEase</h1>
+        </a>
+      </div>
+      <button
+        class="mobile-menu-btn"
+        aria-label="Toggle mobile menu"
+        aria-expanded="false"
+      >
+        <i class="fas fa-bars"></i>
+      </button>
+      <div class="nav-buttons">
+        <a href="/login"><button class="nav-btn login-btn">Login</button></a>
+        <div class="dropdown">
+          <button class="nav-btn register-btn">
+            Register <i class="fas fa-chevron-down"></i>
+          </button>
+          <div class="dropdown-content">
+            <a href="/admin/register" class="dropdown-option">
+              <i class="fas fa-user-shield"></i> Admin Register
+            </a>
+            <a href="/merchant/register" class="dropdown-option">
+              <i class="fas fa-store"></i> Merchant Register
+            </a>
+            <a href="/customer/register" class="dropdown-option">
+              <i class="fas fa-user"></i> Customer Register
+            </a>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <!-- Mobile menu (hidden by default) -->
+    <div class="mobile-menu">
+      <div class="nav-buttons">
+        <a href="/login"><button class="nav-btn login-btn">Login</button></a>
+        <div class="dropdown">
+          <button class="nav-btn register-btn mobile-dropdown-toggle">
+            Register <i class="fas fa-chevron-down"></i>
+          </button>
+          <div class="dropdown-content">
+            <a href="/admin/register" class="dropdown-option">
+              <i class="fas fa-user-shield"></i> Admin Register
+            </a>
+            <a href="/merchant/register" class="dropdown-option">
+              <i class="fas fa-store"></i> Merchant Register
+            </a>
+            <a href="/customer/register" class="dropdown-option">
+              <i class="fas fa-user"></i> Customer Register
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Alert messages that will disappear after 2 seconds -->
+    <div th:if="${session.pass}" class="alert alert-success">
+      <i class="fas fa-check-circle alert-icon"></i>
+      <span th:text="${session.pass}"></span>
+    </div>
+    <div th:if="${session.fail}" class="alert alert-danger">
+      <i class="fas fa-exclamation-circle alert-icon"></i>
+      <span th:text="${session.fail}"></span>
+    </div>
+    <th:block th:text="${@messageRemover.remove()}"></th:block>
+    <main id="main-content">
+      <div class="forgot-container">
+        <div class="forgot-header">
+          <h2>Reset Password</h2>
+          <p>Enter your email and new password</p>
+        </div>
+        <form action="/forgot-password" method="post">
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <div class="input-with-icon">
+              <i class="fas fa-envelope input-icon"></i>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="Enter your email"
+                required
+                autocomplete="email"
+              />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="password">New Password</label>
+            <div class="input-with-icon">
+              <i class="fas fa-lock input-icon"></i>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="Enter new password"
+                required
+              />
+              <i class="fas fa-eye password-toggle" id="passwordToggle"></i>
+            </div>
+            <div class="password-strength-meter">
+              <div class="password-strength-meter-fill" id="strengthMeter"></div>
+            </div>
+            <div class="password-strength-text" id="strengthText">
+              <i class="fas fa-info-circle"></i> Password strength: Enter a password
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="conformPassword">Confirm Password</label>
+            <div class="input-with-icon">
+              <i class="fas fa-lock input-icon"></i>
+              <input
+                type="password"
+                id="conformPassword"
+                name="conformPassword"
+                placeholder="Confirm your new password"
+                required
+              />
+              <i class="fas fa-eye password-toggle" id="confirmPasswordToggle"></i>
+            </div>
+            <div class="password-match-indicator" id="passwordMatch"></div>
+          </div>
+          <button type="submit" class="submit-button" id="submitButton">
+            Reset Password <i class="fas fa-key"></i>
+          </button>
+          <div class="login-link">
+            Remember your password? <a href="/login">Back to Login</a>
+          </div>
+        </form>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="footer-content">
+        <div class="footer-logo">
+          <i class="fas fa-shopping-bag"></i>
+          <h2>ShopEase</h2>
+        </div>
+        <div class="social-icons-footer">
+          <a href="#" aria-label="Facebook">
+            <i class="fab fa-facebook-f"></i>
+          </a>
+          <a href="#" aria-label="Twitter">
+            <i class="fab fa-twitter"></i>
+          </a>
+          <a href="#" aria-label="Instagram">
+            <i class="fab fa-instagram"></i>
+          </a>
+          <a href="#" aria-label="LinkedIn">
+            <i class="fab fa-linkedin-in"></i>
+          </a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 ShopEase. All Rights Reserved.</p>
+      </div>
+    </footer>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Handle alerts
+        const removeAlerts = () => {
+          const alerts = document.querySelectorAll(".alert");
+          if (alerts.length > 0) {
+            setTimeout(function () {
+              alerts.forEach((alert) => {
+                alert.style.display = "none";
+              });
+            }, 2000);
+          }
+        };
+        removeAlerts();
+        
+        // Password visibility toggle for new password
+        const passwordToggle = document.getElementById("passwordToggle");
+        const passwordField = document.getElementById("password");
+        if (passwordToggle && passwordField) {
+          passwordToggle.addEventListener("click", function () {
+            if (passwordField.type === "password") {
+              passwordField.type = "text";
+              passwordToggle.classList.remove("fa-eye");
+              passwordToggle.classList.add("fa-eye-slash");
+            } else {
+              passwordField.type = "password";
+              passwordToggle.classList.remove("fa-eye-slash");
+              passwordToggle.classList.add("fa-eye");
+            }
+          });
+        }
+        
+        // Password visibility toggle for confirm password
+        const confirmPasswordToggle = document.getElementById("confirmPasswordToggle");
+        const confirmPasswordField = document.getElementById("conformPassword");
+        if (confirmPasswordToggle && confirmPasswordField) {
+          confirmPasswordToggle.addEventListener("click", function () {
+            if (confirmPasswordField.type === "password") {
+              confirmPasswordField.type = "text";
+              confirmPasswordToggle.classList.remove("fa-eye");
+              confirmPasswordToggle.classList.add("fa-eye-slash");
+            } else {
+              confirmPasswordField.type = "password";
+              confirmPasswordToggle.classList.remove("fa-eye-slash");
+              confirmPasswordToggle.classList.add("fa-eye");
+            }
+          });
+        }
+
+        // Password strength meter
+        const strengthMeter = document.getElementById("strengthMeter");
+        const strengthText = document.getElementById("strengthText");
+        const passwordInput = document.getElementById("password");
+        
+        passwordInput.addEventListener("input", function() {
+          const password = this.value;
+          let strength = 0;
+          let strengthClass = "";
+          let strengthMessage = "";
+          
+          // Check password length
+          if (password.length >= 8) {
+            strength += 1;
+          }
+          
+          // Check for mixed case
+          if (password.match(/[a-z]/) && password.match(/[A-Z]/)) {
+            strength += 1;
+          }
+          
+          // Check for numbers
+          if (password.match(/\d/)) {
+            strength += 1;
+          }
+          
+          // Check for special characters
+          if (password.match(/[^a-zA-Z\d]/)) {
+            strength += 1;
+          }
+          
+          // Update strength meter based on score
+          switch (strength) {
+            case 0:
+              strengthClass = "";
+              strengthMessage = "<i class='fas fa-info-circle'></i> Password strength: Enter a password";
+              break;
+            case 1:
+              strengthClass = "strength-weak";
+              strengthMessage = "<i class='fas fa-exclamation-circle'></i> Password strength: Weak";
+              break;
+            case 2:
+              strengthClass = "strength-fair";
+              strengthMessage = "<i class='fas fa-exclamation-triangle'></i> Password strength: Fair";
+              break;
+            case 3:
+              strengthClass = "strength-good";
+              strengthMessage = "<i class='fas fa-check-circle'></i> Password strength: Good";
+              break;
+            case 4:
+              strengthClass = "strength-strong";
+              strengthMessage = "<i class='fas fa-shield-alt'></i> Password strength: Strong";
+              break;
+          }
+          
+          // Update the UI
+          strengthMeter.className = "password-strength-meter-fill " + strengthClass;
+          strengthText.innerHTML = strengthMessage;
+          
+          // Check password match
+          checkPasswordMatch();
+        });
+        
+        // Password match validation
+        const confirmInput = document.getElementById("conformPassword");
+        const passwordMatch = document.getElementById("passwordMatch");
+        const submitButton = document.getElementById("submitButton");
+        
+        function checkPasswordMatch() {
+          const password = passwordInput.value;
+          const confirmPassword = confirmInput.value;
+          
+          if (confirmPassword === "") {
+            passwordMatch.innerHTML = "";
+            return;
+          }
+          
+          if (password === confirmPassword) {
+            passwordMatch.innerHTML = "<i class='fas fa-check-circle'></i> Passwords match";
+            passwordMatch.className = "password-match-indicator match-success";
+            submitButton.disabled = false;
+          } else {
+            passwordMatch.innerHTML = "<i class='fas fa-times-circle'></i> Passwords do not match";
+            passwordMatch.className = "password-match-indicator match-error";
+            submitButton.disabled = true;
+          }
+        }
+        
+        confirmInput.addEventListener("input", checkPasswordMatch);
+
+        // Input focus animation
+        const formInputs = document.querySelectorAll(".form-group input");
+        formInputs.forEach((input) => {
+          input.addEventListener("focus", function () {
+            this.parentElement.parentElement.classList.add("input-focused");
+          });
+          input.addEventListener("blur", function () {
+            this.parentElement.parentElement.classList.remove("input-focused");
+          });
+        });
+
+        // Mobile menu functionality
+        const mobileMenuBtn = document.querySelector(".mobile-menu-btn");
+        const mobileMenu = document.querySelector(".mobile-menu");
+        if (mobileMenuBtn && mobileMenu) {
+          mobileMenuBtn.addEventListener("click", function () {
+            if (mobileMenu.style.display === "block") {
+              mobileMenu.style.display = "none";
+              mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+              mobileMenuBtn.setAttribute("aria-expanded", "false");
+            } else {
+              mobileMenu.style.display = "block";
+              mobileMenuBtn.innerHTML = '<i class="fas fa-times"></i>';
+              mobileMenuBtn.setAttribute("aria-expanded", "true");
+            }
+          });
+        }
+
+        // Mobile dropdown toggle
+        const mobileDropdownToggles = document.querySelectorAll(
+          ".mobile-dropdown-toggle"
+        );
+        mobileDropdownToggles.forEach((toggle) => {
+          toggle.addEventListener("click", function (e) {
+            e.preventDefault();
+            const parent = this.parentElement;
+            if (parent.classList.contains("active")) {
+              parent.classList.remove("active");
+              this.querySelector("i").classList.remove("fa-chevron-up");
+              this.querySelector("i").classList.add("fa-chevron-down");
+            } else {
+              parent.classList.add("active");
+              this.querySelector("i").classList.remove("fa-chevron-down");
+              this.querySelector("i").classList.add("fa-chevron-up");
+            }
+          });
+        });
+
+        // Close mobile menu when clicking outside
+        document.addEventListener("click", function (event) {
+          if (mobileMenu && mobileMenu.style.display === "block") {
+            const isClickInsideMenu = mobileMenu.contains(event.target);
+            const isClickOnMenuBtn = mobileMenuBtn.contains(event.target);
+            if (!isClickInsideMenu && !isClickOnMenuBtn) {
+              mobileMenu.style.display = "none";
+              mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+              mobileMenuBtn.setAttribute("aria-expanded", "false");
+            }
+          }
+        });
+        
+        // Form validation
+        const form = document.querySelector("form");
+        if (form) {
+          form.addEventListener("submit", function(event) {
+            const password = document.getElementById("password").value;
+            const conformPassword = document.getElementById("conformPassword").value;
+            
+            if (password !== conformPassword) {
+              event.preventDefault();
+              alert("Passwords do not match. Please try again.");
+            }
+            
+            // Check password strength
+            let strength = 0;
+            
+            // Check password length
+            if (password.length >= 8) {
+              strength += 1;
+            }
+            
+            // Check for mixed case
+            if (password.match(/[a-z]/) && password.match(/[A-Z]/)) {
+              strength += 1;
+            }
+            
+            // Check for numbers
+            if (password.match(/\d/)) {
+              strength += 1;
+            }
+            
+            // Check for special characters
+            if (password.match(/[^a-zA-Z\d]/)) {
+              strength += 1;
+            }
+            
+            if (strength < 2) {
+              event.preventDefault();
+              alert("Password is too weak. Please use a stronger password with at least 8 characters, including uppercase, lowercase, numbers, and special characters.");
+            }
+          });
+        }
+      });
+    </script>
+  </body>
+</html>
+ 

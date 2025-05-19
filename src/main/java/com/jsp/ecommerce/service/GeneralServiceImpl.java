@@ -82,4 +82,52 @@ public class GeneralServiceImpl implements GeneralService {
 		return "redirect:/";
 	}
 
+	@Override
+	public String forgotPassword(String email, String password,String conformPassword, HttpSession session) {
+		session.removeAttribute("admin");
+		session.removeAttribute("merchant");
+		session.removeAttribute("customer");
+
+		Admin admin = adminRepository.findByEmail(email);
+		Customer customer = customerRepository.findByEmail(email);
+		Merchant merchant = merchantRepository.findByEmail(email);
+
+		if (admin == null && merchant == null && customer == null) {
+			session.setAttribute("fail", "Invalid Email");
+			return "redirect:/forgot";
+		}
+		if (admin != null) {
+			if (password.equals(conformPassword)) {
+				session.setAttribute("admin", admin);
+				session.setAttribute("pass", "Password Updated Success");
+				return "redirect:/login";
+			} else {
+				session.setAttribute("fail", "Password Miss Matched");
+				return "redirect:/forgot";
+			}
+		}
+		if (merchant != null) {
+			if (password.equals(conformPassword)) {
+				session.setAttribute("merchant", merchant);
+				session.setAttribute("pass", "Password Updated Success");
+				return "redirect:/login";
+			} else {
+				session.setAttribute("fail", "Password Miss Matched");
+				return "redirect:/forgot";
+			}
+		}
+		if (customer != null) {
+			if (password.equals(conformPassword)) {
+				session.setAttribute("customer", customer);
+				session.setAttribute("pass", "Password Updated Success");
+				return "redirect:/login";
+			} else {
+				session.setAttribute("fail", "Password Miss Matched");
+				return "redirect:/forgot";
+			}
+		}
+		return "redirect:/forgot";
+	}
 }
+
+	

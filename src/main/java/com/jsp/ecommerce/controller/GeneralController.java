@@ -33,4 +33,17 @@ public class GeneralController {
 		return generalService.logout(session);
 	}
 	
+	@GetMapping("/forgot-password")
+	public String forgotPassword() {
+		return "forgot.html";
+	}
+	
+	@PostMapping("/forgot-password")
+	public String forgotPassword(@RequestParam("email") String email,
+			@RequestParam("password") String password,
+			@RequestParam("conformPassword") String conformPassword,
+			HttpSession session) {
+		return generalService.forgotPassword(email, password, conformPassword, session);
+	}
+	
 }
