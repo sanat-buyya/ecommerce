@@ -1,8 +1,9 @@
-# eCommerce Application
+# E-Commerce Application (ShopEase)
 
-A Spring Boot based eCommerce web application with distinct roles and functionalities for Admin, Merchant, and Customer. It supports product management, order processing, and role-based access control.
-
+Overview
 ---
+This is a Java Spring Boot e-commerce application that provides a platform for merchants to sell products and customers to purchase them. The application includes features like user authentication, product management, shopping cart functionality, and payment processing through RazorPay integration.
+
 
 ## 🚀 Features
 
@@ -23,10 +24,10 @@ src/
     ├── java/                   
     │   └── com/yourpackage/                     
     │       ├── controller/                       
-    │       │   ├── AdminController.java        # Admin-related endpoints                
-    │       │   ├── MerchantController.java     # Merchant-related endpoints           
-    │       │   ├── CustomerController.java     # Customer-related endpoints        
-    │       │   └── GeneralController.java      # Common endpoints for all users          
+    │       │   ├── AdminController.java                     
+    │       │   ├── MerchantController.java               
+    │       │   ├── CustomerController.java             
+    │       │   └── GeneralController.java                
     │       ├── model/                                
     │       │   ├── Product.java                 # Product entity           
     │       │   ├── Order.java                   # Order entity           
