@@ -1,6 +1,7 @@
 package com.jsp.ecommerce.entity;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -108,5 +109,6 @@ public class Orders {
 	public void setCustomer(Customer customer) {
 		this.customer = customer;
 	}
+	
 	
 }
