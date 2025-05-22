@@ -14,7 +14,7 @@ import lombok.Setter;
 public class ProductDto {
 	@Size(min = 3, max = 50, message = "* Name should be 3~50 charecters")
 	private String name;
-	@Size(min = 15, max = 100, message = "* Description should be 15~100 charecters")
+	@Size(min = 15, max = 300, message = "* Description should be 15~300 charecters")
 	private String description;
 	private MultipartFile image;
 	@Min(value = 100, message = "* Minimum Product Price should be 100")

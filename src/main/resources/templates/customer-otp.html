@@ -1148,292 +1148,251 @@
     </footer>
 
     <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        // Handle alerts
-        const removeAlerts = () => {
-          const alerts = document.querySelectorAll(".alert");
-          if (alerts.length > 0) {
-            setTimeout(function () {
-              alerts.forEach((alert) => {
-                alert.style.display = "none";
-              });
-            }, 2000);
-          }
-        };
-        removeAlerts();
-
-        // Mobile menu functionality
-        const mobileMenuBtn = document.querySelector(".mobile-menu-btn");
-        const mobileMenu = document.querySelector(".mobile-menu");
-        if (mobileMenuBtn && mobileMenu) {
-          mobileMenuBtn.addEventListener("click", function () {
-            if (mobileMenu.style.display === "block") {
-              mobileMenu.style.display = "none";
-              mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
-              mobileMenuBtn.setAttribute("aria-expanded", "false");
-            } else {
-              mobileMenu.style.display = "block";
-              mobileMenuBtn.innerHTML = '<i class="fas fa-times"></i>';
-              mobileMenuBtn.setAttribute("aria-expanded", "true");
-            }
+  document.addEventListener("DOMContentLoaded", function () {
+    // Handle alerts
+    const removeAlerts = () => {
+      const alerts = document.querySelectorAll(".alert");
+      if (alerts.length > 0) {
+        setTimeout(function () {
+          alerts.forEach((alert) => {
+            alert.style.display = "none";
           });
+        }, 2000);
+      }
+    };
+    removeAlerts();
+
+    // Mobile menu functionality
+    const mobileMenuBtn = document.querySelector(".mobile-menu-btn");
+    const mobileMenu = document.querySelector(".mobile-menu");
+    if (mobileMenuBtn && mobileMenu) {
+      mobileMenuBtn.addEventListener("click", function () {
+        if (mobileMenu.style.display === "block") {
+          mobileMenu.style.display = "none";
+          mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+          mobileMenuBtn.setAttribute("aria-expanded", "false");
+        } else {
+          mobileMenu.style.display = "block";
+          mobileMenuBtn.innerHTML = '<i class="fas fa-times"></i>';
+          mobileMenuBtn.setAttribute("aria-expanded", "true");
         }
-
-        // Mobile dropdown toggle
-        const mobileDropdownToggles = document.querySelectorAll(
-          ".mobile-dropdown-toggle"
-        );
-        mobileDropdownToggles.forEach((toggle) => {
-          toggle.addEventListener("click", function (e) {
-            e.preventDefault();
-            const parent = this.parentElement;
-            if (parent.classList.contains("active")) {
-              parent.classList.remove("active");
-              this.querySelector("i").classList.remove("fa-chevron-up");
-              this.querySelector("i").classList.add("fa-chevron-down");
-            } else {
-              parent.classList.add("active");
-              this.querySelector("i").classList.remove("fa-chevron-down");
-              this.querySelector("i").classList.add("fa-chevron-up");
-            }
-          });
-        });
-
-        // Close mobile menu when clicking outside
-        document.addEventListener("click", function (event) {
-          if (mobileMenu && mobileMenu.style.display === "block") {
-            const isClickInsideMenu = mobileMenu.contains(event.target);
-            const isClickOnMenuBtn = mobileMenuBtn.contains(event.target);
-            if (!isClickInsideMenu && !isClickOnMenuBtn) {
-              mobileMenu.style.display = "none";
-              mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
-              mobileMenuBtn.setAttribute("aria-expanded", "false");
-            }
-          }
-        });
-
-        // OTP input handling
-        const digitInputs = document.querySelectorAll(".digit-input");
-        const otpForm = document.getElementById("otpForm");
-        const otpValue = document.getElementById("otpValue");
-        const verifyButton = document.getElementById("verifyButton");
-
-        // Function to check if all digits are filled
-        function checkOtpComplete() {
-          let isComplete = true;
-          let otp = "";
-
-          digitInputs.forEach((input) => {
-            if (!input.value) {
-              isComplete = false;
-            }
-            otp += input.value;
-          });
-
-          // Update hidden input with combined OTP value
-          otpValue.value = otp;
-
-          // Enable/disable submit button
-          if (isComplete) {
-            verifyButton.disabled = false;
-            verifyButton.classList.add("ready");
-          } else {
-            verifyButton.disabled = true;
-            verifyButton.classList.remove("ready");
-          }
-
-          return isComplete;
-        }
-
-        // Add event listeners to each digit input
-        digitInputs.forEach((input, index) => {
-          // Only allow numbers
-          input.addEventListener("input", function (e) {
-            this.value = this.value.replace(/[^0-9]/g, "");
-
-            if (this.value) {
-              this.classList.add("filled");
-              // Move to next input if available
-              if (index < digitInputs.length - 1) {
-                digitInputs[index + 1].focus();
-              }
-            } else {
-              this.classList.remove("filled");
-            }
-
-            checkOtpComplete();
-          });
-
-          // Handle backspace
-          input.addEventListener("keydown", function (e) {
-            if (e.key === "Backspace") {
-              if (this.value === "") {
-                // Move to previous input if current is empty
-                if (index > 0) {
-                  digitInputs[index - 1].focus();
-                  digitInputs[index - 1].value = "";
-                  digitInputs[index - 1].classList.remove("filled");
-                  e.preventDefault();
-                }
-              } else {
-                this.value = "";
-                this.classList.remove("filled");
-                e.preventDefault();
-              }
-              checkOtpComplete();
-            }
-          });
-
-          // Handle paste event for the entire OTP
-          input.addEventListener("paste", function (e) {
-            e.preventDefault();
-            const pasteData = e.clipboardData.getData("text").trim();
-
-            // Check if pasted data is a 6-digit number
-            if (/^\d{6}$/.test(pasteData)) {
-              // Distribute digits to inputs
-              digitInputs.forEach((input, i) => {
-                input.value = pasteData.charAt(i);
-                if (input.value) {
-                  input.classList.add("filled");
-                }
-              });
-              checkOtpComplete();
-            }
-          });
-        });
-
-        // Form submission with success animation
-        otpForm.addEventListener("submit", function (e) {
-          // In a real implementation, you would validate the OTP server-side
-          // This is just for demonstration purposes
-
-          // Uncomment this line for actual form submission
-          // return true;
-
-          // For demo: show success animation
-          e.preventDefault();
-
-          // Disable inputs and button during "verification"
-          digitInputs.forEach((input) => {
-            input.disabled = true;
-          });
-          verifyButton.disabled = true;
-          verifyButton.innerHTML =
-            '<i class="fas fa-spinner fa-spin"></i> Verifying...';
-
-          // Simulate verification process
-          setTimeout(() => {
-            // Hide form elements
-            otpForm.style.opacity = "0";
-            document.getElementById("timerContainer").style.display = "none";
-
-            // Show success animation
-            setTimeout(() => {
-              otpForm.style.display = "none";
-              document.querySelector(".otp-header p").textContent =
-                "Your account has been successfully verified! You will be redirected to the login page.";
-              document.getElementById("successCheckmark").style.display =
-                "block";
-
-              // Redirect after showing success (in a real app)
-              setTimeout(() => {
-                window.location.href = "/login";
-              }, 3000);
-            }, 300);
-          }, 1500);
-        });
-
-        // Countdown timer for OTP expiration
-        const countdownEl = document.getElementById("countdown");
-        const timerContainer = document.getElementById("timerContainer");
-        const resendLink = document.getElementById("resendLink");
-        let timeLeft = 120; // 2 minutes in seconds
-        let countdownTimer;
-
-        function updateCountdown() {
-          const minutes = Math.floor(timeLeft / 60);
-          let seconds = timeLeft % 60;
-          seconds = seconds < 10 ? "0" + seconds : seconds;
-          countdownEl.textContent = `${minutes}:${seconds}`;
-
-          // Add warning class when less than 30 seconds remain
-          if (timeLeft <= 30) {
-            timerContainer.classList.add("expiring");
-          }
-
-          if (timeLeft <= 0) {
-            clearInterval(countdownTimer);
-            countdownEl.textContent = "00:00";
-            timerContainer.classList.add("expiring");
-            resendLink.style.display = "block";
-
-            // Disable inputs when OTP expires
-            digitInputs.forEach((input) => {
-              input.disabled = true;
-            });
-            verifyButton.disabled = true;
-          } else {
-            timeLeft--;
-          }
-        }
-
-        countdownTimer = setInterval(updateCountdown, 1000);
-        updateCountdown();
-
-        // Resend OTP functionality
-        resendLink.addEventListener("click", function (e) {
-          e.preventDefault();
-
-          // Show loading state
-          this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
-          this.style.pointerEvents = "none";
-
-          // Simulate API call to resend OTP
-          setTimeout(() => {
-            // Reset timer
-            timeLeft = 120;
-            timerContainer.classList.remove("expiring");
-            resendLink.style.display = "none";
-
-            // Reset the resend link text
-            resendLink.innerHTML =
-              '<i class="fas fa-redo-alt"></i> Resend Verification Code';
-            resendLink.style.pointerEvents = "auto";
-
-            // Re-enable inputs
-            digitInputs.forEach((input) => {
-              input.disabled = false;
-              input.value = "";
-              input.classList.remove("filled");
-            });
-            verifyButton.disabled = true;
-            verifyButton.classList.remove("ready");
-
-            // Clear the combined OTP value
-            otpValue.value = "";
-
-            // Focus on first input
-            digitInputs[0].focus();
-
-            // Restart countdown
-            clearInterval(countdownTimer);
-            countdownTimer = setInterval(updateCountdown, 1000);
-
-            // Show success message
-            const alertContainer = document.createElement("div");
-            alertContainer.className = "alert alert-success";
-            alertContainer.innerHTML =
-              '<i class="fas fa-check-circle alert-icon"></i><span>Verification code has been resent to your email</span>';
-            document.body.appendChild(alertContainer);
-
-            setTimeout(() => {
-              alertContainer.style.opacity = "0";
-              setTimeout(() => alertContainer.remove(), 300);
-            }, 2000);
-          }, 1500);
-        });
       });
-    </script>
+    }
+
+    // Mobile dropdown toggle
+    const mobileDropdownToggles = document.querySelectorAll(
+      ".mobile-dropdown-toggle"
+    );
+    mobileDropdownToggles.forEach((toggle) => {
+      toggle.addEventListener("click", function (e) {
+        e.preventDefault();
+        const parent = this.parentElement;
+        if (parent.classList.contains("active")) {
+          parent.classList.remove("active");
+          this.querySelector("i").classList.remove("fa-chevron-up");
+          this.querySelector("i").classList.add("fa-chevron-down");
+        } else {
+          parent.classList.add("active");
+          this.querySelector("i").classList.remove("fa-chevron-down");
+          this.querySelector("i").classList.add("fa-chevron-up");
+        }
+      });
+    });
+
+    // Close mobile menu when clicking outside
+    document.addEventListener("click", function (event) {
+      if (mobileMenu && mobileMenu.style.display === "block") {
+        const isClickInsideMenu = mobileMenu.contains(event.target);
+        const isClickOnMenuBtn = mobileMenuBtn.contains(event.target);
+        if (!isClickInsideMenu && !isClickOnMenuBtn) {
+          mobileMenu.style.display = "none";
+          mobileMenuBtn.innerHTML = '<i class="fas fa-bars"></i>';
+          mobileMenuBtn.setAttribute("aria-expanded", "false");
+        }
+      }
+    });
+
+    // OTP input handling
+    const digitInputs = document.querySelectorAll(".digit-input");
+    const otpForm = document.getElementById("otpForm");
+    const otpValue = document.getElementById("otpValue");
+    const verifyButton = document.getElementById("verifyButton");
+
+    // Function to check if all digits are filled
+    function checkOtpComplete() {
+      let isComplete = true;
+      let otp = "";
+
+      digitInputs.forEach((input) => {
+        if (!input.value) {
+          isComplete = false;
+        }
+        otp += input.value;
+      });
+
+      // Update hidden input with combined OTP value
+      otpValue.value = otp;
+
+      // Enable/disable submit button
+      if (isComplete) {
+        verifyButton.disabled = false;
+        verifyButton.classList.add("ready");
+      } else {
+        verifyButton.disabled = true;
+        verifyButton.classList.remove("ready");
+      }
+
+      return isComplete;
+    }
+
+    // Add event listeners to each digit input
+    digitInputs.forEach((input, index) => {
+      // Only allow numbers
+      input.addEventListener("input", function (e) {
+        this.value = this.value.replace(/[^0-9]/g, "");
+
+        if (this.value) {
+          this.classList.add("filled");
+          // Move to next input if available
+          if (index < digitInputs.length - 1) {
+            digitInputs[index + 1].focus();
+          }
+        } else {
+          this.classList.remove("filled");
+        }
+
+        checkOtpComplete();
+      });
+
+      // Handle backspace
+      input.addEventListener("keydown", function (e) {
+        if (e.key === "Backspace") {
+          if (this.value === "") {
+            // Move to previous input if current is empty
+            if (index > 0) {
+              digitInputs[index - 1].focus();
+              digitInputs[index - 1].value = "";
+              digitInputs[index - 1].classList.remove("filled");
+              e.preventDefault();
+            }
+          } else {
+            this.value = "";
+            this.classList.remove("filled");
+            e.preventDefault();
+          }
+          checkOtpComplete();
+        }
+      });
+
+      // Handle paste event for the entire OTP
+      input.addEventListener("paste", function (e) {
+        e.preventDefault();
+        const pasteData = e.clipboardData.getData("text").trim();
+
+        // Check if pasted data is a 6-digit number
+        if (/^\d{6}$/.test(pasteData)) {
+          // Distribute digits to inputs
+          digitInputs.forEach((input, i) => {
+            input.value = pasteData.charAt(i);
+            if (input.value) {
+              input.classList.add("filled");
+            }
+          });
+          checkOtpComplete();
+        }
+      });
+    });
+
+    // Countdown timer for OTP expiration
+    const countdownEl = document.getElementById("countdown");
+    const timerContainer = document.getElementById("timerContainer");
+    const resendLink = document.getElementById("resendLink");
+    let timeLeft = 120; // 2 minutes in seconds
+    let countdownTimer;
+
+    function updateCountdown() {
+      const minutes = Math.floor(timeLeft / 60);
+      let seconds = timeLeft % 60;
+      seconds = seconds < 10 ? "0" + seconds : seconds;
+      countdownEl.textContent = `${minutes}:${seconds}`;
+
+      // Add warning class when less than 30 seconds remain
+      if (timeLeft <= 30) {
+        timerContainer.classList.add("expiring");
+      }
+
+      if (timeLeft <= 0) {
+        clearInterval(countdownTimer);
+        countdownEl.textContent = "00:00";
+        timerContainer.classList.add("expiring");
+        resendLink.style.display = "block";
+
+        // Disable inputs when OTP expires
+        digitInputs.forEach((input) => {
+          input.disabled = true;
+        });
+        verifyButton.disabled = true;
+      } else {
+        timeLeft--;
+      }
+    }
+
+    countdownTimer = setInterval(updateCountdown, 1000);
+    updateCountdown();
+
+    // Resend OTP functionality
+    resendLink.addEventListener("click", function (e) {
+      e.preventDefault();
+
+      // Show loading state
+      this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+      this.style.pointerEvents = "none";
+
+      // Simulate API call to resend OTP
+      setTimeout(() => {
+        // Reset timer
+        timeLeft = 120;
+        timerContainer.classList.remove("expiring");
+        resendLink.style.display = "none";
+
+        // Reset the resend link text
+        resendLink.innerHTML =
+          '<i class="fas fa-redo-alt"></i> Resend Verification Code';
+        resendLink.style.pointerEvents = "auto";
+
+        // Re-enable inputs
+        digitInputs.forEach((input) => {
+          input.disabled = false;
+          input.value = "";
+          input.classList.remove("filled");
+        });
+        verifyButton.disabled = true;
+        verifyButton.classList.remove("ready");
+
+        // Clear the combined OTP value
+        otpValue.value = "";
+
+        // Focus on first input
+        digitInputs[0].focus();
+
+        // Restart countdown
+        clearInterval(countdownTimer);
+        countdownTimer = setInterval(updateCountdown, 1000);
+
+        // Show success message
+        const alertContainer = document.createElement("div");
+        alertContainer.className = "alert alert-success";
+        alertContainer.innerHTML =
+          '<i class="fas fa-check-circle alert-icon"></i><span>Verification code has been resent to your email</span>';
+        document.body.appendChild(alertContainer);
+
+        setTimeout(() => {
+          alertContainer.style.opacity = "0";
+          setTimeout(() => alertContainer.remove(), 300);
+        }, 2000);
+      }, 1500);
+    });
+  });
+</script>
   </body>
 </html>
